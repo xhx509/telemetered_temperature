@@ -14,8 +14,8 @@ from pandas import *
 import matplotlib.dates as md
 import matplotlib.pyplot as plt
 from drifter_functions import colors
-f_ori='minilog4.csv'                     #define  data files
-f_cur='2014-12-18 10:45:45.csv'
+f_ori='Minilog-II-T_356008_20150410_1.csv'                     #define  data files
+f_cur='2015-04-15 10:44:43.csv'
 #cur_id=24576
 #input_time=[dt.datetime(2014,12,15,15,0,0,0,pytz.UTC),dt.datetime(2014,12,16,10,0,0,0,pytz.UTC)]
 
@@ -27,11 +27,11 @@ for i in range(len(df1['driftid'])-1):
         ids.append(df1['driftid'][i+1])
 rgbcolor=colors(len(ids)) # set plot color
 variables=['date','tim','temp']
-skipr=8     #get rid of first 8 rows
-dt=read_csv(f_ori,sep=',',skiprows=skipr,parse_dates={'time':[0,1]},date_parser=parse,names=variables)  #read minilog data
+skipr=50    #get rid of first 8 rows
+dt=read_csv(f_ori,sep=',',skiprows=skipr,parse_dates={'time':[0,1]},date_parser=parse,names=variables,nrows=110)  #read minilog data
 time_ori=dt['time'].tolist()
 import datetime
-time_ori=[(datetime.datetime.strptime(str(q),'%Y-%m-%d %H:%M:%S')-datetime.timedelta(hours=1)) for q in time_ori]  #time transition
+time_ori=[(datetime.datetime.strptime(str(q),'%Y-%m-%d %H:%M:%S')+datetime.timedelta(hours=4)) for q in time_ori]  #time transition
 #datetime.datetime.fromtimestamp(). strptime('%Y-%m-%d %H:%M:%S')
 temp_ori=dt['temp'].tolist()
 
@@ -45,11 +45,11 @@ ax.plot(time_ori,temp_ori,label='minilog',linewidth=3, color='r')
 for m in range(len(ids)):
     dfm=df1[df1['driftid'] == ids[m]]
     for n in range(len(dfm)):  # get data of a time period
-        if str(dfm['time'].iloc[n])[0:13]=='2014-12-17 11':
+        if str(dfm['time'].iloc[n])[0:13]=='2015-04-09 07':
             idx=n          
             continue
     for x in range(len(dfm)):
-        if str(dfm['time'].iloc[x])[0:13]=='2014-12-18 09':
+        if str(dfm['time'].iloc[x])[0:13]=='2015-04-09 16':
             idx2=x          
             continue    
     df2=dfm.iloc[idx:idx2]
@@ -65,18 +65,28 @@ for m in range(len(ids)):
     RMS=np.sqrt(sum([(b_te[z]-m_te[z])**2 for z in range(len(b_te))])/y) #calculate RMS
     print  ids[m], mean_mis , RMS ,y    
     f.writelines(str(ids[m])+','+ str(mean_mis)+','+ str(round(RMS,2))+ ','+str(y)+'\n' )    #write it to a file  
+    
     temp_cur=df2['temp_cur'].tolist()
-    time_cur=df2['time'].tolist()
+    bad_index=[]
+    for p in range(len(temp_cur)):
+        if temp_cur[p]<=0:
+            bad_index.append(p)
+    bad_index.reverse()
 
+    time_cur=df2['time'].tolist()
+    time_cur=[(j+datetime.timedelta(hours=5)) for j in time_cur]
+    for i in bad_index:
+        del    time_cur[i], temp_cur[i]
    
     #df1.plot(x='time',y='temp_cur')
     ax.plot(time_cur,temp_cur,label=ids[m],linewidth=2, color=rgbcolor[m])
 f.close()
 ax.set_ylabel('Temperature(C)',fontsize=18)  #plot
-xfmt = md.DateFormatter('%Y-%m-%d %H:%M:%S')   #set plot time axis format
+xfmt = md.DateFormatter('%Y-%m-%d %H:%M')   #set plot time axis format
 ax.xaxis.set_major_formatter(xfmt)
 ax.legend()
 plt.gcf().autofmt_xdate() #beautify time axis
+plt.title('Visible Assets vs Minilog',fontsize=25)
 #df1.plot(x='time',y='temp_cur')
 plt.show()
 plt.savefig('test'+'.png')  #save file
