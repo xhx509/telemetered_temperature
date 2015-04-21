@@ -3,7 +3,9 @@
 Created on Thu Apr 16 10:01:31 2015
 
 Based on vitali's program 'sh_chkTBath', plot a graph to compare minilog1 and 2, 
-#check hard iron correction
+check hard iron correction
+
+before running this program, put all csv files you want to read to same folder as 'minilog_s.py'
 
 @author: hxu
 """
@@ -21,8 +23,12 @@ from dateutil.parser import parse
 # run with LSaveCFG=0 to check if evrything is alright
 # then enable saving by setting LSaveCFG=1
 LSaveCFG=0 
-#LSaveCFG=1
 
+'''
+# modify input below
+'''
+
+###############################################################################################################
 #Here is the bath data from 09 April 2015
 #all times are UTC
 TBath_DATE='2015-04-09'
@@ -43,8 +49,8 @@ TBath_t2 = np.array([datetime.strptime(TBath_DATE+TBath_T2[k],'%Y-%m-%d%H:%M:%S'
 FN=glob.glob('*.csv') # get all csv files in 1 folder
 #rgbcolor=colors(len(FN))
 CLR=['r','g','b','m','c','y']
-CLR=CLR*8
-
+CLR=CLR*8  # the number based on how many probes you have
+###################################################################################################################
 
 
 for k in range(len(FN)):
