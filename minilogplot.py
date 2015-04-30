@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Wed Apr 15 11:43:25 2015
-
+simple plot for only plotting minilog
 @author: hxu
 """
 from dateutil.parser import parse

@@ -2,7 +2,7 @@
 """
 Created on Tue Dec 16 09:52:58 2014
 
-Compare minilog sensor and blue 
+Compare minilog sensor and blue by plotting a pic
 
 @author: hxu
 """

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Apr 21 12:49:05 2015
-
+read 'onset' data ,and plot graph of time and temp
 @author: hxu
 """
 from pandas import *
-import xlrd
+import xlrd   #to read xlrd
 from dateutil.parser import parse
 import matplotlib.pyplot as plt
 import matplotlib.dates as md
@@ -16,7 +16,7 @@ location=book.sheet_by_index(2).row_slice(rowx=11,
                                 start_colx=3,
                                 end_colx=4)
 location=str(location[0])[5:]
-lat1=int(location[2:4])
+lat1=int(location[2:4])                 #convert lat lon  to XX.XXXX
 lat2=int(location[8:10])/60.0
 lat3=int(location[11:13])/3600.0
 lon1=-int(location[16:18])
